@@ -76,9 +76,26 @@ $(document).ready(() =>{
     GUI.result.click(() =>{
         let mathPos = GUI.input.value.search(regExp);
         let lastSymbol = GUI.input.value.slice(-1);
+        let value = GUI.input.value;
+        let action = value[mathPos];
 
         if(mathPos !== -1 && lastSymbol !== '.'){
-            GUI.input.value = eval(GUI.input.value);
+            let leftSide = +value.slice(0, mathPos);
+            let rightSide = +value.slice(mathPos + 1, value.length);
+
+            switch (action) {
+                case '-':
+                    GUI.input.value = leftSide - rightSide;
+                    break;
+                case '+':
+                    GUI.input.value = leftSide + rightSide;
+                    break;
+                case '/':
+                    GUI.input.value = leftSide / rightSide;
+                    break;
+                case '*':
+                    GUI.input.value = leftSide * rightSide;
+            }
         }
     });
 });
