@@ -12,6 +12,7 @@ $(document).ready(() =>{
     };
 
     let regExp = /\+|\-|\/|\*/;
+    let action = null;
 
     //обработчик на кнопку backspace удаление последнего символа в input
     GUI.backspace.click(() =>{
@@ -38,13 +39,14 @@ $(document).ready(() =>{
 
     //обработчик на клики по кнопкам с арифметическими действиями
     GUI.mathSymbols.click(function () {
-        let mathPos = GUI.input.value.search(regExp);
+        let actionPos = GUI.input.value.search(regExp);
         let lastSymbol = GUI.input.value.slice(-1);
 
         //если последний символ не ноль и не точка
         //и арифм. знака в строке еще нет то можно ставить знак
-        if(GUI.input.value !== '0' && mathPos === -1 && lastSymbol !== '.'){
+        if(GUI.input.value !== '0' && actionPos === -1 && lastSymbol !== '.'){
             GUI.input.value += this.innerText;
+            action = this.innerText;
         }
     });
 
@@ -52,15 +54,15 @@ $(document).ready(() =>{
     GUI.point.click(() =>{
         let lastSymbol = GUI.input.value.slice(-1);
         let numberPoints = GUI.input.value.split('.').length - 1;
-        let mathPos = GUI.input.value.search(regExp);
+        let actionPos = GUI.input.value.search(regExp);
 
         //если точки в строке еще нет и последний символ цифра
         //и арифм. знака еще нет то можно ставить точку
-        if (numberPoints === 0 && !isNaN(lastSymbol) && mathPos === -1) {
+        if (numberPoints === 0 && !isNaN(lastSymbol) && actionPos === -1) {
             GUI.input.value += '.';
         }
         //если последний символ цифра и есть арифм. знак
-        else if (!isNaN(lastSymbol) && mathPos !== -1) {
+        else if (!isNaN(lastSymbol) && actionPos !== -1) {
             let arrStr = GUI.input.value.split(regExp);
             numberPoints = arrStr[1].split('.').length - 1;
 
@@ -74,14 +76,13 @@ $(document).ready(() =>{
     //обработчик на кнопку со знаком равенства
     //определение результата арифм. действия и вывод в input
     GUI.result.click(() =>{
-        let mathPos = GUI.input.value.search(regExp);
-        let lastSymbol = GUI.input.value.slice(-1);
         let value = GUI.input.value;
-        let action = value[mathPos];
+        let lastSymbol = value.slice(-1);
 
-        if(mathPos !== -1 && lastSymbol !== '.'){
-            let leftSide = +value.slice(0, mathPos);
-            let rightSide = +value.slice(mathPos + 1, value.length);
+        if(action !== null && lastSymbol !== '.'){
+            let actionPos = value.search(regExp);
+            let leftSide = +value.slice(0, actionPos);
+            let rightSide = +value.slice(actionPos + 1, value.length);
 
             switch (action) {
                 case '-':
